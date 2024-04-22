@@ -26,7 +26,7 @@ exports.handler = async (event) => {
                 TrackID: trackId,
                 Title: title,
                 Artist: artist,
-                Album: album,
+                Album: album
             }
         };
 
