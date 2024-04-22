@@ -30,7 +30,7 @@ exports.handler = async (event) => {
 
             const imageParams = {
                 Bucket: bucket,
-                Key: `album-art/${key.split('/').pop().split('.')[0]}.${extension}`,
+                Key: `album-cover/${key.split('/').pop().split('.')[0]}.${extension}`,
                 Body: Readable.from(picture.data),
                 ContentType: picture.format,
                 ContentLength: picture.data.length
