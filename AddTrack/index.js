@@ -1,40 +1,52 @@
 const AWS = require('aws-sdk');
-const s3 = new AWS.S3();
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const { v4: uuidv4 } = require('uuid');
 
-exports.handler = async (event) => {
-    // Parse the JSON string in event.body
-    const body = JSON.parse(event.body);
-    // Now parse the actual JSON string to get the data object
-    const data = JSON.parse(body);
+AWS.config.update({ region: 'eu-central-1' });
 
-    const { title, artist, album, fileContentBase64, fileName } = data;
+const s3 = new AWS.S3();
+const dynamoDB = new AWS.DynamoDB.DocumentClient();
+
+exports.handler = async (event) => {
+    const { title, artist, album, fileContentBase64, fileName } = JSON.parse(event.body);
+
     const trackId = uuidv4();
 
     const s3Params = {
-        Bucket: 'music-app-bucket',
+        Bucket: 'vot-music-bucket',
         Key: `tracks/${trackId}/${fileName}`,
         Body: Buffer.from(fileContentBase64, 'base64'),
-        ContentType: 'audio/mpeg',
+        ContentType: 'audio/mpeg'
+    };
+
+    const dbParams = {
+        TableName: 'TracksTable',
+        Item: {
+            TrackID: trackId,
+            Title: title,
+            Artist: artist,
+            Album: album,
+            FileName: fileName,
+            S3Bucket: s3Params.Bucket,
+            S3Key: s3Params.Key
+        }
     };
 
     try {
         await s3.putObject(s3Params).promise();
-        const dbParams = {
-            TableName: 'music_app',
-            Item: {
-                TrackID: trackId,
-                Title: title,
-                Artist: artist,
-                Album: album
-            }
-        };
+        console.log('File uploaded successfully.');
 
         await dynamoDB.put(dbParams).promise();
-        return { statusCode: 200, body: JSON.stringify({ message: 'Track added successfully', trackId: trackId }) };
+        console.log('Metadata added successfully.');
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Track added successfully', trackId: trackId })
+        };
     } catch (error) {
         console.error('Error:', error);
-        return { statusCode: 500, body: JSON.stringify({ message: 'Failed to add the track', error: error.message }) };
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ message: 'Failed to add the track', error: error.message })
+        };
     }
 };
