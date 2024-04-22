@@ -1,0 +1,14 @@
+{
+  "Records": [
+    {
+      "s3": {
+        "bucket": {
+          "name": "vot-music-bucket"
+        },
+        "object": {
+          "key": "tracks/7e398563-246d-41cb-9319-c5f8fcaba476/Lupe Fiasco - Jump ft. Gizzle.mp3"
+        }
+      }
+    }
+  ]
+}
