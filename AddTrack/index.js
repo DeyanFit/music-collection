@@ -12,14 +12,14 @@ exports.handler = async (event) => {
     const trackId = uuidv4();
 
     const s3Params = {
-        Bucket: 'vot-music-bucket',
+        Bucket: 'david-music-bucket-vot',
         Key: `tracks/${trackId}/${fileName}`,
         Body: Buffer.from(fileContentBase64, 'base64'),
         ContentType: 'audio/mpeg'
     };
 
     const dbParams = {
-        TableName: 'TracksTable',
+        TableName: 'david-dynamodb-music',
         Item: {
             TrackID: trackId,
             Title: title,
