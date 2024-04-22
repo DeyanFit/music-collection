@@ -27,9 +27,6 @@ exports.handler = async (event) => {
                 Title: title,
                 Artist: artist,
                 Album: album,
-                // Add URLs or other necessary attributes
-                // For example, constructing the S3 URL. Ensure the URL structure matches your S3 bucket configuration
-                AudioFileURL: `https://${s3Params.Bucket}.s3.amazonaws.com/${s3Params.Key}`
             }
         };
 
